@@ -19,9 +19,10 @@ def choose_login_or_register
    end
  end
 
- def main_menue
+#  def main_menu
 
-  puts "Hello, You're here #{self.user.username}"
- end
+#   puts "Hello, You're here #{user.name}"
+#   prompt.select("choose a team, user.recipes")
+#  end
 
 end

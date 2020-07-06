@@ -11,13 +11,14 @@ class User < ActiveRecord::Base
       if User.find_by(name: username)
         puts "Sorry, the name has been taken"
       end
+      User.create(name: username)
    end
    def self.logging_someone_in
     prompt = TTY::Prompt.new
     username = prompt.ask("what is your username?")
    found_user = User.find_by(name: username) 
       if found_user
-        return found_user
+         found_user
       else 
         puts "Sorry, looks like you need a new username! :/"
            sleep(3)
@@ -25,12 +26,3 @@ class User < ActiveRecord::Base
     end    
   end 
 end
-# else
-#     while !founduser
-#       puts" try again?"
-#       TTY::promt (yes or no)
-#       if promp == yes
-#          self.logging_someone_on
-#       else
-#        return to main menu
-#  etc
