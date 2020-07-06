@@ -19,10 +19,20 @@ def choose_login_or_register
    end
  end
 
-#  def main_menu
 
-#   puts "Hello, You're here #{user.name}"
-#   prompt.select("choose a team, user.recipes")
-#  end
+ def main_menu
+
+  puts "Hello, You're here #{user.name}"
+  input = prompt.select("what would you like to do?") do |menu|
+       menu.choice 'Search for a drink', -> {User.search_drinks}
+
+       menu.choice 'create a new drink'
+            
+    end
+  
+ end
+
+  
+
 
 end
