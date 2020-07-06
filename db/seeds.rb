@@ -18,7 +18,6 @@ Mike= User.find_or_create_by(name: "Mike", age: 33)
 jojo = User.find_or_create_by(name: "Jojo", age: 65)
 miran = User.find_or_create_by(name: "Miran", age: 55)
 kali = User.find_or_create_by(name: "Kali", age: 44)
-
 # t.string :name
 # t.boolean :alcohol
 # t.string :category
