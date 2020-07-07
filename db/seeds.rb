@@ -32,14 +32,18 @@ virgin_pinacolada = Drink.find_or_create_by(name: "Pina Colada", alcohol: 0 ,cat
 oldfashion = Drink.find_or_create_by(name: "Old Fashion", alcohol: 1 ,category: "Whiskey")
 
 
-Recipe.find_or_create_by(user_id: kali.id, drink_id: agentorange.id, ingredients: "Pour")
-Recipe.find_or_create_by(user_id: jojo.id, drink_id: aviation.id, ingredients: "1,2,3")
-Recipe.find_or_create_by(user_id: mike.id, drink_id: margarita.id, ingredients: "drink,drink,drink")
-Recipe.find_or_create_by(user_id: melat.id, drink_id: nixon.id, ingredients: "crystal")
-Recipe.find_or_create_by(user_id: teki.id, drink_id: sourwhiskey.id, ingredients: "brush brush brush")
+Recipe.create(user_id: kali.id, drink_id: agentorange.id, ingredients: "Pour")
+Recipe.create(user_id: jojo.id, drink_id: aviation.id, ingredients: "1 1/2 oz Gin, 1/2 oz Lemon juice, 1/2 oz Maraschino liqueur, Crème de violette or Creme Yvette.
+Add all ingredients into cocktail shaker filled with ice. Shake well and strain into cocktail glass. Garnish with a cherry.")
+Recipe.create(user_id: mike.id, drink_id: margarita.id, ingredients: "drink,drink,drink")
+Recipe.create(user_id: melat.id, drink_id: nixon.id, ingredients: "crystal")
+Recipe.create(user_id: teki.id, drink_id: sourwhiskey.id, ingredients: "brush brush brush")
 # t.integer :user_id
 # t.integer :drink_id
 # t.string  :ingredients
+
+
+
 
 
 puts "Done seeding!"

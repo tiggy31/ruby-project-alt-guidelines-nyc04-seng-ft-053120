@@ -10,14 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2020_07_06_202044) do
+=======
+ActiveRecord::Schema.define(version: 2020_07_06_202349) do
+>>>>>>> 3b62369d7eb533f2b4bf9065a5e57f6daf09051a
 
   create_table "drinks", force: :cascade do |t|
     t.string "name"
     t.boolean "alcohol"
     t.string "category"
+<<<<<<< HEAD
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+=======
+    t.datetime "created_at"
+    t.datetime "updated_at"
+>>>>>>> 3b62369d7eb533f2b4bf9065a5e57f6daf09051a
     t.string "created_by"
   end
 
@@ -25,15 +34,15 @@ ActiveRecord::Schema.define(version: 2020_07_06_202044) do
     t.integer "user_id"
     t.integer "drink_id"
     t.string "ingredients"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.integer "age"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
