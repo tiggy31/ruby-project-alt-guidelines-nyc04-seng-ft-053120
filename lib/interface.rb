@@ -52,6 +52,35 @@ class Interface
   end
 
 
+<<<<<<< HEAD
+  def main_menu
+  prompt.select("Hey #{User.name}!!! What would you like to do?") do |menu|
+    menu.choice "Search for a cocktail/drink.",  -> { self.search_for_a_drink }
+    menu.choice "Create a new cocktail/drink.", -> { }
+    menu.choice "See all my created cocktails/drinks", -> {  }
+    menu.choice "Close app", ->{self.welcome}
+ end
+end
+  
+def search_for_a_drink
+  prompt = TTY::Prompt.new
+  requested_drink = prompt.ask("Name your poison.")
+  requested_drink_id = Drink.find_drink_id(requested_drink)
+  recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
+  puts "Hey stranger! Here is the recipe and directions for your drink!"
+  puts recipe_ingredients
+  sleep(2)
+  main_menu
+end
+
+
+def create_a_new_drink
+  prompt = TTY::Prompt.new
+  new_drink = prompt.ask("What is the name of your drink? ")
+  new_drink_title = Drink.create()
+ 
+end
+=======
   def see_all_my_created_drinks(name_of_creator)
     prompt = @prompt
     my_new_drinks = Drink.find_created_by(name_of_creator)
@@ -60,6 +89,7 @@ class Interface
     created_drink_ingredients = Recipe.find_recipe_ingredients(selected_drink_id)
     show_ingredients(created_drink_ingredients)
   end
+>>>>>>> 3b62369d7eb533f2b4bf9065a5e57f6daf09051a
 
   def delete_my_drink(name_of_user)
     prompt = @prompt
