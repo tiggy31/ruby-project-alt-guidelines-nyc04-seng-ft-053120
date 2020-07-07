@@ -1,6 +1,7 @@
 require_relative '../config/environment'
 class Drink < ActiveRecord::Base
 
+
     has_many :recipes
     has_many :users, through: :recipes
 
@@ -17,14 +18,22 @@ class Drink < ActiveRecord::Base
     end
   end
 
-  def update_cocktail
-  end
-
   def self.delete_cocktail(chosen_drink)
     Drink.all.find do |drink|
-      # binding.pry
        drink.destroy if drink.name == chosen_drink
     end
   end
+
+  def self.rename_my_concoctions(selected_drink, updated_name, user_name)
+     Drink.all.each do |drink|
+      if drink.name == selected_drink && drink.created_by == user_name
+        drink.name = updated_name
+        drink.save
+      end
+    end
+  end
+
+
+
 
 end

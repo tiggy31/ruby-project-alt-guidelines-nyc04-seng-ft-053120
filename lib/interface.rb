@@ -21,6 +21,8 @@ class Interface
         menu.choice "Create a new cocktail/drink.", -> { self.create_a_new_drink }
         menu.choice "Checks my created cocktails/drinks", -> { self.see_all_my_created_drinks(user.name) }
         menu.choice "Delete my created drinks", -> {self.delete_my_drink(user.name)}
+        menu.choice "Update created cocktail name", -> {self.update_cocktail_name(user.name)}
+        menu.choice "Update created cocktail ingredients", -> {self.update_cocktail_ingredients(user.name)}
         menu.choice "Close app.", -> { }
     end
   end
@@ -28,7 +30,7 @@ class Interface
   def show_ingredients(string)
     puts "Here you go, the recipe and directions for your drink!"
     puts string
-    sleep(4)
+    sleep(3)
     main_menu
   end
 
@@ -68,5 +70,24 @@ class Interface
     main_menu
   end
 
+  def update_cocktail_name(name_of_user)
+    prompt = @prompt
+    my_concoction = Drink.find_created_by(name_of_user)
+    selected_drink = prompt.select("Here are your concoctions. Which one do you want to rename?", my_concoction)
+    updated_name = prompt.ask("What is the new name of your drink? ")
+    Drink.rename_my_concoctions(selected_drink, updated_name, name_of_user)
+    puts "The cocktails name is now #{updated_name}"
+    main_menu
+  end
+
+  def update_cocktail_ingredients(name_of_user)
+    prompt = @prompt
+    my_concoction = Drink.find_created_by(name_of_user)
+    selected_drink = prompt.select("Here are your concoctions. Which one do you want to update?", my_concoction)
+    updated_ingredients = prompt.ask("How is it made? ")
+    selected_drink_id = Drink.find_drink_id(selected_drink)
+    Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
+    main_menu
+  end
 
 end

@@ -11,4 +11,14 @@ class Recipe < ActiveRecord::Base
         return recipe.ingredients if recipe.drink_id == passed_drink_id
       end
     end
+
+    def self.new_cocktail_ingredients(selected_drink_id, updated_ingredients )
+      Recipe.all.each do |recipe|
+        if recipe.drink_id == selected_drink_id
+          recipe.ingredients = updated_ingredients
+          recipe.save
+        end
+      end
+    end
+
 end
