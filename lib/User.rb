@@ -10,8 +10,12 @@ class User < ActiveRecord::Base
     if User.find_by(name: username)
       puts "Sorry, the name has been taken"
     else
-      User.create(name: username)
-      puts "You are registered!!"
+      new_user = User.create(name: username)
+      prompt = TTY::Prompt.new
+      new_user_age =  prompt.ask("Great! How old are you #{new_user.name}?")
+      new_user.age = new_user_age
+      new_user.save
+      puts "You are registered!"
     end
   end
 

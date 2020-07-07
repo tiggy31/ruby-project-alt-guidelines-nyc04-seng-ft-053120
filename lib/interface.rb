@@ -1,6 +1,6 @@
 require_relative '../config/environment'
 class Interface
-  attr_accessor :prompt, :user
+  attr_accessor :prompt, :user, :drink, :recipe
 
   def initialize
     @prompt = TTY::Prompt.new
@@ -27,9 +27,10 @@ class Interface
     end
   end
 
-  def show_ingredients(string)
+  def show_ingredients(created_drink_ingredients)
+    # binding.pry
     puts "Here you go, the recipe and directions for your drink!"
-    puts string
+    puts created_drink_ingredients
     sleep(3)
     main_menu
   end
@@ -37,6 +38,7 @@ class Interface
   def find_drink_prompt(prompt_question, name_of_creator)
     prompt = @prompt
     my_concoction = Drink.find_created_by(name_of_creator)
+    main_menu if my_concoction == nil
     selected_drink = prompt.select(prompt_question, my_concoction)
   end
 
@@ -86,7 +88,5 @@ class Interface
     Recipe.create ({user_id: user.id, drink_id: new_drink.id, ingredients: new_drink_ingredients })
     main_menu
   end
-
-
 
 end
