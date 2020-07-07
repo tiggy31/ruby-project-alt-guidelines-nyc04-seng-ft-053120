@@ -23,7 +23,7 @@ class Interface
         menu.choice "Delete my created drinks", -> {self.delete_my_drink(user.name)}
         menu.choice "Update created cocktail name", -> {self.update_cocktail_name(user.name)}
         menu.choice "Update created cocktail ingredients", -> {self.update_cocktail_ingredients(user.name)}
-        menu.choice "Close app.", -> { }
+        menu.choice "Close app.", -> { next }
     end
   end
 
