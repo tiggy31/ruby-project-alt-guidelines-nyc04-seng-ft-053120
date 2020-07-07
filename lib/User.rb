@@ -27,26 +27,6 @@ class User < ActiveRecord::Base
     end    
   end 
 
-   def self.search_drinks
-    prompt = TTY::Prompt.new
-    search_drink = prompt.ask("what drink would you like?")
-     Drink.all.find do |drink| 
-      drink.name == search_drink
-      self.ingredientsper(drink.id)
-      puts "hello"
-      
-    end
-   end
-
-def self.ingredientsper(input)
-  Recipe.all.select do |rec|
-   rec.drink_id == input
-      rec
-   binding.pry
-  end
-end
-
-
 end
 # else
 #     while !founduser

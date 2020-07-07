@@ -20,19 +20,32 @@ def choose_login_or_register
  end
 
 
- def main_menu
-
-  puts "Hello, You're here #{user.name}"
-  input = prompt.select("what would you like to do?") do |menu|
-       menu.choice 'Search for a drink', -> {User.search_drinks}
-
-       menu.choice 'create a new drink'
-            
-    end
-  
+  def main_menu
+  prompt.select("Hey #{User.name}!!! What would you like to do?") do |menu|
+    menu.choice "Search for a cocktail/drink.",  -> { self.search_for_a_drink }
+    menu.choice "Create a new cocktail/drink.", -> { }
+    menu.choice "See all my created cocktails/drinks", -> {  }
+    menu.choice "Close app", ->{self.welcome}
  end
-
+end
   
+def search_for_a_drink
+  prompt = TTY::Prompt.new
+  requested_drink = prompt.ask("Name your poison.")
+  requested_drink_id = Drink.find_drink_id(requested_drink)
+  recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
+  puts "Hey stranger! Here is the recipe and directions for your drink!"
+  puts recipe_ingredients
+  sleep(2)
+  main_menu
+end
 
+
+def create_a_new_drink
+  prompt = TTY::Prompt.new
+  new_drink = prompt.ask("What is the name of your drink? ")
+  new_drink_title = Drink.create()
+ 
+end
 
 end
