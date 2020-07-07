@@ -34,13 +34,40 @@ class Interface
     main_menu
   end
 
-  def see_all_my_created_drinks(name_of_creator)
+  def find_drink_prompt(prompt_question, name_of_creator)
     prompt = @prompt
-    my_new_drinks = Drink.find_created_by(name_of_creator)
-    selected_drink = prompt.select("Here are your own concoctions. Which one do you want to check?", my_new_drinks, symbols: {marker: '>'})
+    my_concoction = Drink.find_created_by(name_of_creator)
+    selected_drink = prompt.select(prompt_question, my_concoction)
+  end
+
+  def see_all_my_created_drinks(name_of_creator)
+    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
     selected_drink_id = Drink.find_drink_id(selected_drink)
     created_drink_ingredients = Recipe.find_recipe_ingredients(selected_drink_id)
     show_ingredients(created_drink_ingredients)
+  end
+
+  def delete_my_drink(name_of_creator)
+    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
+    Drink.delete_cocktail(selected_drink)
+    puts "The cocktail has been deleted"
+    main_menu
+  end
+
+  def update_cocktail_name(name_of_creator)
+    selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to rename?", name_of_creator)
+    updated_name = prompt.ask("What is the new name of your drink? ")
+    Drink.rename_my_concoctions(selected_drink, updated_name, name_of_creator)
+    puts "The cocktails name is now #{updated_name}"
+    main_menu
+  end
+
+  def update_cocktail_ingredients(name_of_creator)
+    selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to update?", name_of_creator)
+    updated_ingredients = prompt.ask("How is it made? ")
+    selected_drink_id = Drink.find_drink_id(selected_drink)
+    Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
+    main_menu
   end
 
   def search_for_a_drink
@@ -60,33 +87,6 @@ class Interface
     main_menu
   end
 
-  def delete_my_drink(name_of_user)
-    prompt = @prompt
-    my_concoction = Drink.find_created_by(name_of_user)
-    selected_drink = prompt.select("Here are your own concoctions. Which one do you want to delete?", my_concoction)
-    Drink.delete_cocktail(selected_drink)
-    puts "The cocktail has been deleted"
-    main_menu
-  end
 
-  def update_cocktail_name(name_of_user)
-    prompt = @prompt
-    my_concoction = Drink.find_created_by(name_of_user)
-    selected_drink = prompt.select("Here are your concoctions. Which one do you want to rename?", my_concoction)
-    updated_name = prompt.ask("What is the new name of your drink? ")
-    Drink.rename_my_concoctions(selected_drink, updated_name, name_of_user)
-    puts "The cocktails name is now #{updated_name}"
-    main_menu
-  end
-
-  def update_cocktail_ingredients(name_of_user)
-    prompt = @prompt
-    my_concoction = Drink.find_created_by(name_of_user)
-    selected_drink = prompt.select("Here are your concoctions. Which one do you want to update?", my_concoction)
-    updated_ingredients = prompt.ask("How is it made? ")
-    selected_drink_id = Drink.find_drink_id(selected_drink)
-    Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
-    main_menu
-  end
 
 end
