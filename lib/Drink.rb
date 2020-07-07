@@ -4,18 +4,7 @@ class Drink < ActiveRecord::Base
 
     has_many :recipes
     has_many :users, through: :recipes
-    has_many :recipes
-    def self.find_drink_id(user_input)
-        Drink.all.find do |drink|
-          return drink.id if drink.name == user_input
-         end
-        end
 
-
-<<<<<<< HEAD
-        
-end
-=======
     def self.find_drink_id(user_input)
       Drink.all.find do |drink|
         return drink.id if drink.name == user_input
@@ -43,8 +32,4 @@ end
     end
   end
 
-
-
-
 end
->>>>>>> 3b62369d7eb533f2b4bf9065a5e57f6daf09051a
