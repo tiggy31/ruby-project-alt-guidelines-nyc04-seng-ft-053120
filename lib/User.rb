@@ -25,13 +25,5 @@ class User < ActiveRecord::Base
         self.create_a_new_user_please
     end
   end
+
 end
-# else
-#     while !founduser
-#       puts" try again?"
-#       TTY::promt (yes or no)
-#       if promp == yes
-#          self.logging_someone_on
-#       else
-#        return to main menu
-#  etc

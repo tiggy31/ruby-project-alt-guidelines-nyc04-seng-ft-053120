@@ -4,4 +4,5 @@ interface.welcome
 user_instance =interface.choose_login_or_register
 interface.user = user_instance
 interface.main_menu
-puts "hello world"
+puts "See you around!"
+# puts "hello world"
