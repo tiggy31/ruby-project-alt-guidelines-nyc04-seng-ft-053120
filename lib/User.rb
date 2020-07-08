@@ -28,7 +28,6 @@ class User < ActiveRecord::Base
     else
       choices = {"try logging in again?" => true, "create a new account?" => false}
       prompt = prompt.select("Sorry about that, it seems like we cant find you. Do you wanto to ", choices)
-      binding.pry
       prompt ? self.logging_someone_in : self.create_a_new_user_please
     end
   end

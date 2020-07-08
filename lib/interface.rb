@@ -1,4 +1,8 @@
 require_relative '../config/environment'
+require 'open-uri'
+require 'net/http'
+require 'json'
+
 class Interface
   attr_accessor :prompt, :user
 
@@ -54,34 +58,52 @@ class Interface
   end
 
   def delete_my_drink(name_of_creator)
-    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
-    Drink.delete_cocktail(selected_drink)
-    puts "The cocktail has been deleted"
-    main_menu
+    value_check = Drink.find_by created_by: name_of_creator
+    if value_check == nil
+      puts "Sorry, you havent created anything yet"
+      main_menu
+    else
+      selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
+      Drink.delete_cocktail(selected_drink)
+      puts "The cocktail has been deleted"
+    end
   end
 
   def update_cocktail_name(name_of_creator)
-    selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to rename?", name_of_creator)
-    updated_name = prompt.ask("What is the new name of your drink? ")
-    Drink.rename_my_concoctions(selected_drink, updated_name, name_of_creator)
-    puts "The cocktails name is now #{updated_name}"
-    main_menu
+    value_check = Drink.find_by created_by: name_of_creator
+    if value_check == nil
+      puts "Sorry, you havent created anything yet"
+      main_menu
+    else
+      selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to rename?", name_of_creator)
+      updated_name = prompt.ask("What is the new name of your drink? ")
+      Drink.rename_my_concoctions(selected_drink, updated_name, name_of_creator)
+      puts "The cocktails name is now #{updated_name}"
+    end
   end
 
   def update_cocktail_ingredients(name_of_creator)
-    selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to update?", name_of_creator)
-    updated_ingredients = prompt.ask("How is it made? ")
-    selected_drink_id = Drink.find_drink_id(selected_drink)
-    Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
-    main_menu
+    value_check = Drink.find_by created_by: name_of_creator
+    if value_check == nil
+      puts "Sorry, you havent created anything yet"
+      main_menu
+    else
+      selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to update?", name_of_creator)
+      updated_ingredients = prompt.ask("How is it made? ")
+      selected_drink_id = Drink.find_drink_id(selected_drink)
+      Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
+    end
   end
 
   def search_for_a_drink
     prompt = @prompt
     requested_drink = prompt.ask("Name your poison.")
-    requested_drink_id = Drink.find_drink_id(requested_drink)
-    recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
-    show_ingredients (recipe_ingredients)
+
+url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{requested_drink}"
+uri = URI.parse(url)
+response = Net::HTTP.get_response(uri)
+response.body
+pp JSON.parse(response.body)
   end
 
   def create_a_new_drink
