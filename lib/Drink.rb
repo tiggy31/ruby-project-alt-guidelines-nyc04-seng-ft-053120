@@ -1,24 +1,20 @@
 require_relative '../config/environment'
 class Drink < ActiveRecord::Base
-  attr_accessor :interface
 
-  has_many :recipes
-  has_many :users, through: :recipes
 
-  def self.find_drink_id(user_input)
-    Drink.all.find do |drink|
-      return drink.id if drink.name == user_input
+    has_many :recipes
+    has_many :users, through: :recipes
+
+
+    def self.find_drink_id(user_input)
+      Drink.all.find do |drink|
+        return drink.id if drink.name == user_input
+      end
     end
-  end
 
-  def self.find_created_by(user_name)
-    mapped = Drink.all.filter_map  {|drink| drink.name if drink.created_by == user_name}
-    if mapped.length > 0
-      mapped
-    else
-      puts "You have not yet created anything."
-      sleep(2)
-      return nil
+    def self.find_created_by(user_name)
+      Drink.all.filter_map do |drink|
+        drink.name if drink.created_by == user_name
     end
   end
 
@@ -36,5 +32,8 @@ class Drink < ActiveRecord::Base
       end
     end
   end
+
+
+
 
 end
