@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
 
   def self.create_a_new_user_please
     prompt = TTY::Prompt.new
-    username =  prompt.ask("What do you want your username to be?")
+    (username =  prompt.ask("What do you want your username to be?")).capitalize!
     if User.find_by(name: username)
       puts "Sorry, the name has been taken"
     else
@@ -21,14 +21,14 @@ class User < ActiveRecord::Base
 
   def self.logging_someone_in
     prompt = TTY::Prompt.new
-    username = prompt.ask("What's your username?")
+    (username = prompt.ask("What's your username?")).capitalize!
     found_user = User.find_by(name: username)
     if found_user
       return found_user
     else
-        puts "Sorry, looks like you need a new username! :/"
-           sleep(3)
-        self.create_a_new_user_please
+      choices = {"try logging in again?" => true, "create a new account?" => false}
+      prompt = prompt.select("Sorry about that, it seems like we cant find you. Do you wanto to ", choices)
+      prompt ? self.logging_someone_in : self.create_a_new_user_please
     end
   end
 

@@ -8,6 +8,8 @@ class Interface
 
   def welcome
     puts "Hello! welcome to my app"
+    a = Artii::Base.new
+    p a.asciify('Art!')
   end
 
   def choose_login_or_register
@@ -23,7 +25,7 @@ class Interface
         menu.choice "Delete my created drinks", -> {self.delete_my_drink(user.name)}
         menu.choice "Update created cocktail name", -> {self.update_cocktail_name(user.name)}
         menu.choice "Update created cocktail ingredients", -> {self.update_cocktail_ingredients(user.name)}
-        menu.choice "Close app.", -> { next }
+        menu.choice "Close app.", -> { self.exit }
     end
   end
 
@@ -39,7 +41,7 @@ class Interface
     prompt = @prompt
     my_concoction = Drink.find_created_by(name_of_creator)
     main_menu if my_concoction == nil
-    selected_drink = prompt.select(prompt_question, my_concoction)
+    prompt.select(prompt_question, my_concoction)
   end
 
   def see_all_my_created_drinks(name_of_creator)
@@ -50,7 +52,7 @@ class Interface
   end
 
   def delete_my_drink(name_of_creator)
-    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
+    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to delete?", name_of_creator)
     Drink.delete_cocktail(selected_drink)
     puts "The cocktail has been deleted"
     main_menu
@@ -87,6 +89,10 @@ class Interface
     new_drink_ingredients = prompt.ask("Alright, how do you make it?")
     Recipe.create ({user_id: user.id, drink_id: new_drink.id, ingredients: new_drink_ingredients })
     main_menu
+  end
+
+  def exit
+    puts "See you around!"
   end
 
 end
