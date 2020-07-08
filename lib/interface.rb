@@ -98,22 +98,27 @@ class Interface
   def search_for_a_drink
     prompt = @prompt
     requested_drink = prompt.ask("Name your poison.")
-
-url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{requested_drink}"
-uri = URI.parse(url)
-response = Net::HTTP.get_response(uri)
-response.body
+    url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{requested_drink}"
+    uri = URI.parse(url)
+    response = Net::HTTP.get_response(uri)
+    response.body
 pp JSON.parse(response.body)
   end
 
-  def create_a_new_drink
-    prompt = @prompt
-    new_drink_name = prompt.ask("What is the name of your drink? ")
-    new_drink = Drink.create({name:new_drink_name , created_by:user.name })
-    new_drink_ingredients = prompt.ask("Alright, how do you make it?")
-    Recipe.create ({user_id: user.id, drink_id: new_drink.id, ingredients: new_drink_ingredients })
-    main_menu
+  def search_for_a_drink
+  prompt = @prompt
+  requested_drink = prompt.ask("Name your poison.")
+  value_check = Drink.find_by name: requested_drink
+    if value_check == nil
+      puts "Sorry we dont have that in our database"
+      sleep(2)
+      main_menu
+    else
+      requested_drink_id = Drink.find_drink_id(requested_drink)
+      recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
+      show_ingredients (recipe_ingredients)
   end
+end
 
 
 
