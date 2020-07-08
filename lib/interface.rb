@@ -96,16 +96,6 @@ class Interface
   end
 
   def search_for_a_drink
-    prompt = @prompt
-    requested_drink = prompt.ask("Name your poison.")
-    url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{requested_drink}"
-    uri = URI.parse(url)
-    response = Net::HTTP.get_response(uri)
-    response.body
-pp JSON.parse(response.body)
-  end
-
-  def search_for_a_drink
   prompt = @prompt
   requested_drink = prompt.ask("Name your poison.")
   value_check = Drink.find_by name: requested_drink
