@@ -31,6 +31,17 @@ class Interface
     end
   end
 
+  def create_a_new_drink
+   prompt = @prompt
+   new_drink_name = prompt.ask("What is the name of your drink? ")
+   new_drink = Drink.create({name:new_drink_name , created_by:user.name })
+   new_drink_ingredients = prompt.ask("Alright, how do you make it?")
+   Recipe.create ({user_id: user.id, drink_id: new_drink.id, ingredients: new_drink_ingredients })
+   puts "Got,it. Everthing has been saved."
+   sleep(1)
+   main_menu
+ end
+
   def show_ingredients(string)
     puts "Here you go, the recipe and directions for your drink!"
     puts string
@@ -95,20 +106,90 @@ class Interface
     end
   end
 
+  def choose_a_drink(drink_array)
+    prompt = @prompt
+    prompt.select("Alright, this is what I have available.", drink_array)
+  end
+
+  def api(drink_requested)
+    url = "https://www.thecocktaildb.com/api/json/v1/1/search.php?s=#{drink_requested}"
+    uri = URI.parse(url)
+    response = Net::HTTP.get_response(uri)
+    response.body
+    JSON.parse(response.body)
+  end
+
+  def api_ingredients(selected_drink)
+    drink_hash = api(selected_drink)
+    drink_converted_hash = {}
+    drink_hash.each do |key,value|
+    count = 1
+      until value[0]["strIngredient#{count}"] == nil
+        drink_converted_hash[value[0]["strIngredient#{count}"]] = value[0]["strMeasure#{count}"]
+        count += 1
+      end
+    end
+    drink_converted_hash
+  end
+
+  def api_instructions(selected_drink)
+    drink_hash = api(selected_drink)
+    directions = drink_hash["drinks"][0]["strInstructions"]
+  end
+
+  def api_directions(selected_drink, selected_drink_ingredients, selected_drink_instructions)
+    puts "Got it, you're going to need"
+    puts nil
+    selected_drink_ingredients.each do |key,value|
+      puts " #{value} of #{key}"
+    end
+    puts nil
+    puts "Here are the directions!"
+    puts nil
+    puts selected_drink_instructions
+    prompt = @prompt
+    prompt.select("Press enter when you're done", %w(ENTER))
+    main_menu
+  end
+
   def search_for_a_drink
-  prompt = @prompt
-  requested_drink = prompt.ask("Name your poison.")
-  value_check = Drink.find_by name: requested_drink
-    if value_check == nil
-      puts "Sorry we dont have that in our database"
+    drink_array = []
+    prompt = @prompt
+    requested_drink = prompt.ask("Name your poison.")
+    if api(requested_drink)["drinks"] == nil
+      puts "Sorry im not sure how to make that."
       sleep(2)
       main_menu
     else
-      requested_drink_id = Drink.find_drink_id(requested_drink)
-      recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
-      show_ingredients (recipe_ingredients)
+    api(requested_drink).each do |key,value|
+      value.each do |inner_key|
+        drink_array << inner_key["strDrink"]
+      end
+    end
+    selected_drink = choose_a_drink(drink_array)
+    selected_drink_ingredients = api_ingredients(selected_drink)
+    selected_drink_instructions = api_instructions(selected_drink)
+    api_directions(selected_drink, selected_drink_ingredients, selected_drink_instructions)
   end
-end
+  end
+
+
+
+
+#   def search_for_a_drink
+#   prompt = @prompt
+#   requested_drink = prompt.ask("Name your poison.")
+#   value_check = Drink.find_by name: requested_drink
+#     if value_check == nil
+#       puts "Sorry we dont have that in our database"
+#       sleep(2)
+#       main_menu
+#     else
+#       requested_drink_id = Drink.find_drink_id(requested_drink)
+#       recipe_ingredients = Recipe.find_recipe_ingredients(requested_drink_id)
+#       show_ingredients (recipe_ingredients)
+#   end
+# end
 
 
 
