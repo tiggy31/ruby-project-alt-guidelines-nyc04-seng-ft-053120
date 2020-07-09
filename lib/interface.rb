@@ -2,6 +2,7 @@ require_relative '../config/environment'
 require 'open-uri'
 require 'net/http'
 require 'json'
+require 'colorize'
 
 class Interface
   attr_accessor :prompt, :user
@@ -11,15 +12,17 @@ class Interface
   end
 
   def welcome
-    puts "Hello! welcome to my app"
+    puts "Hello! welcome to my app".colorize(:white)
   end
 
   def choose_login_or_register
-    answer = prompt.select("Are you logging in or registering?", ["Logging in", "Registering"])
+    system("clear")
+    answer = prompt.select("Are you logging in or registering?".colorize(:white), ["Logging in", "Registering"])
     answer == "Logging in" ? User.logging_someone_in : User.create_a_new_user_please
   end
 
   def main_menu
+    system("clear")
       prompt.select("Hey #{user.name}! What would you like to do?") do |menu|
         menu.choice "Search for a cocktail/drink.",  -> { self.search_for_a_drink }
         menu.choice "Create a new cocktail/drink.", -> { self.create_a_new_drink }
@@ -156,26 +159,23 @@ class Interface
     drink_array = []
     prompt = @prompt
     requested_drink = prompt.ask("Name your poison.")
-    if api(requested_drink)["drinks"] == nil
-      puts "Sorry im not sure how to make that."
-      sleep(2)
-      main_menu
-    else
-    api(requested_drink).each do |key,value|
-      value.each do |inner_key|
+      if api(requested_drink)["drinks"] == nil
+        puts "Sorry im not sure how to make that."
+        sleep(2)
+        main_menu
+      else
+        api(requested_drink).each do |key,value|
+        value.each do |inner_key|
+          binding.pry
         drink_array << inner_key["strDrink"]
+        end
       end
-    end
     selected_drink = choose_a_drink(drink_array)
     selected_drink_ingredients = api_ingredients(selected_drink)
     selected_drink_instructions = api_instructions(selected_drink)
     api_directions(selected_drink, selected_drink_ingredients, selected_drink_instructions)
+    end
   end
-  end
-
-
-
-
 #   def search_for_a_drink
 #   prompt = @prompt
 #   requested_drink = prompt.ask("Name your poison.")
@@ -190,7 +190,4 @@ class Interface
 #       show_ingredients (recipe_ingredients)
 #   end
 # end
-
-
-
 end
