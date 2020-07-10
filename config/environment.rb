@@ -1,3 +1,4 @@
+$VERBOSE=nil
 require 'bundler'
 require 'open-uri'
 require 'net/http'

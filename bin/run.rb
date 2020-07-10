@@ -7,6 +7,8 @@ until user_instance
   user_instance=interface.choose_login_or_register
 end
 interface.user = user_instance
+Ani.animation
+sleep(2)
 interface.main_menu
 puts "See you around!"
 # puts "hello world"

@@ -3,33 +3,38 @@ require 'open-uri'
 require 'net/http'
 require 'json'
 require 'colorize'
+require 'artii'
+require 'tty-table'
 
 class Interface
-  attr_accessor :prompt, :user
+  attr_accessor :prompt, :user, :ani
 
   def initialize
     @prompt = TTY::Prompt.new
   end
 
   def welcome
-    puts "Hello! welcome to my app".colorize(:white)
+    # Ani.animation
+    # sleep(2)
+    a = Artii::Base.new :font => 'slant'
+    puts a.asciify("Drinks On Me!").colorize(:green)
+    puts "Hello! welcome to Drinks On Me!".colorize(:white)
   end
 
   def choose_login_or_register
-    system("clear")
+
     answer = prompt.select("Are you logging in or registering?".colorize(:white), ["Logging in", "Registering"])
     answer == "Logging in" ? User.logging_someone_in : User.create_a_new_user_please
   end
 
   def main_menu
-    system("clear")
       prompt.select("Hey #{user.name}! What would you like to do?") do |menu|
         menu.choice "Search for a cocktail/drink.",  -> { self.search_for_a_drink }
         menu.choice "Create a new cocktail/drink.", -> { self.create_a_new_drink }
-        menu.choice "Checks my created cocktails/drinks", -> { self.see_all_my_created_drinks(user.name) }
+        menu.choice "See all my created cocktails/drinks", -> { self.see_all_my_created_drinks(user.name) }
         menu.choice "Delete my created drinks", -> {self.delete_my_drink(user.name)}
-        menu.choice "Update created cocktail name", -> {self.update_cocktail_name(user.name)}
-        menu.choice "Update created cocktail ingredients", -> {self.update_cocktail_ingredients(user.name)}
+        menu.choice "Update a created cocktail name", -> {self.update_cocktail_name(user.name)}
+        menu.choice "Update a created cocktail ingredients", -> {self.update_cocktail_ingredients(user.name)}
         menu.choice "Close app.", -> { }
     end
   end
@@ -46,8 +51,8 @@ class Interface
  end
 
   def show_ingredients(string)
-    puts "Here you go, the recipe and directions for your drink!"
-    puts string
+    puts "Here you go, the recipe and directions for your cocktail!"
+    puts string.colorize(:white)
     sleep(3)
     main_menu
   end
@@ -61,10 +66,10 @@ class Interface
   def see_all_my_created_drinks(name_of_creator)
     value_check = Drink.find_by created_by: name_of_creator
     if value_check == nil
-      puts "Sorry, you havent created anything yet"
+      puts "Sorry, looks like you havent made anything yet"
       main_menu
     else
-    selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
+    selected_drink = find_drink_prompt("Here are all of your concoctions. Which one do you want to check?", name_of_creator)
     selected_drink_id = Drink.find_drink_id(selected_drink)
     created_drink_ingredients = Recipe.find_recipe_ingredients(selected_drink_id)
     show_ingredients(created_drink_ingredients)
@@ -74,38 +79,41 @@ class Interface
   def delete_my_drink(name_of_creator)
     value_check = Drink.find_by created_by: name_of_creator
     if value_check == nil
-      puts "Sorry, you havent created anything yet"
+      puts "Sorry, looks like you havent made anything yet"
       main_menu
     else
       selected_drink = find_drink_prompt("Here are your own concoctions. Which one do you want to check?", name_of_creator)
       Drink.delete_cocktail(selected_drink)
       puts "The cocktail has been deleted"
+      main_menu
     end
   end
 
   def update_cocktail_name(name_of_creator)
     value_check = Drink.find_by created_by: name_of_creator
     if value_check == nil
-      puts "Sorry, you havent created anything yet"
+      puts "Sorry, looks like you havent made anything yet"
       main_menu
     else
       selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to rename?", name_of_creator)
       updated_name = prompt.ask("What is the new name of your drink? ")
       Drink.rename_my_concoctions(selected_drink, updated_name, name_of_creator)
       puts "The cocktails name is now #{updated_name}"
+      main_menu
     end
   end
 
   def update_cocktail_ingredients(name_of_creator)
     value_check = Drink.find_by created_by: name_of_creator
     if value_check == nil
-      puts "Sorry, you havent created anything yet"
+      puts "Sorry, looks like you havent made anything yet"
       main_menu
     else
       selected_drink = find_drink_prompt("Here are your concoctions. Which one do you want to update?", name_of_creator)
       updated_ingredients = prompt.ask("How is it made? ")
       selected_drink_id = Drink.find_drink_id(selected_drink)
       Recipe.new_cocktail_ingredients(selected_drink_id, updated_ingredients)
+      main_menu
     end
   end
 
@@ -144,14 +152,16 @@ class Interface
     puts "Got it, you're going to need"
     puts nil
     selected_drink_ingredients.each do |key,value|
-      puts " #{value} of #{key}"
+      puts " #{value} of #{key}".colorize(:white)
     end
     puts nil
-    puts "Here are the directions!"
+    puts "🍸Here are the directions!🍸"
     puts nil
-    puts selected_drink_instructions
+    puts selected_drink_instructions.colorize(:white)
+    puts nil
     prompt = @prompt
     prompt.select("Press enter when you're done", %w(ENTER))
+    system "clear"
     main_menu
   end
 
@@ -166,7 +176,7 @@ class Interface
       else
         api(requested_drink).each do |key,value|
         value.each do |inner_key|
-          binding.pry
+          #binding.pry
         drink_array << inner_key["strDrink"]
         end
       end
